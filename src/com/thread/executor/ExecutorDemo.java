@@ -65,21 +65,28 @@ public class ExecutorDemo {
             ExecutorService executorService = Executors.newCachedThreadPool();
             //记录开始时间
             Instant startTime = Instant.now();
+            //需要所有任务查询完毕所以用的invokeAll
             List<Future<Long>> result = executorService.invokeAll(tasks);
             long total = 0;
             for (Future<Long> future: result)
                 total += future.get();
+            //记录完毕时间
             Instant endTime = Instant.now();
             System.out.println("Occurrences of " + keyword + "" + total);
             System.out.println("Time elapsed: " + Duration.between(startTime, endTime).toMillis() + "ms");
+            //创建保存了任务的集合
             var searchTasks = new ArrayList<Callable<Path>>();
+            //遍历目录文件将查找字符任务加入任务集合
             for (Path file: files){
                 searchTasks.add(searchForTask(keyword, file));
             }
+            //将任务集合提交至服务
             Path found = executorService.invokeAny(searchTasks);
             System.out.println(keyword + "occurs in: " + found);
+            //如果实现了ThreadPoolExecutor接口输出线程池中的最大线程数目
             if (executorService instanceof ThreadPoolExecutor)
                 System.out.println("Largest pool size: " + ((ThreadPoolExecutor)executorService).getLargestPoolSize());
+            //执行器关闭
             executorService.shutdown();
         }
     }
