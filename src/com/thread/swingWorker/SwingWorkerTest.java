@@ -34,7 +34,7 @@ class SwingWorkerFrame extends JFrame{
 
     public SwingWorkerFrame(){
         chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new File("."));
+        chooser.setCurrentDirectory(new File("./file/"));
         textArea = new JTextArea(TEXT_ROWS, TEXT_COLUMNS);
         add(new JScrollPane(textArea));
 
@@ -73,7 +73,7 @@ class SwingWorkerFrame extends JFrame{
 
     private class TextReader extends SwingWorker<StringBuilder, ProgressData>{
         private File file;
-        private StringBuilder text;
+        private StringBuilder text = new StringBuilder();
 
         public TextReader(File file){
             this.file = file;
